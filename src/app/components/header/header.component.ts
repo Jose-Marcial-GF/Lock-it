@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -6,9 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  isLoggedIn = false;
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.authService.getUserState().subscribe(user => {
+      this.isLoggedIn = !!user;
+    });
+  }
 
+  // Función para cerrar sesión
+  async logout() {
+    await this.authService.logout();
+    window.location.reload();
+  }
 }

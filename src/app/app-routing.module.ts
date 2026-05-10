@@ -19,6 +19,15 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'list',
+    loadChildren: () => import('./pages/list/list.module').then( m => m.ListPageModule)
+  },
+  {
+    path: 'password-detail/:id',
+    loadChildren: () => import('./pages/password-detail/password-detail.module').then( m => m.PasswordDetailPageModule)
+  }
+
 ];
 
 @NgModule({

@@ -1,0 +1,30 @@
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+
+  textarea {
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px;
+    padding-right: 50px;
+    border: 1px solid #1c5b8e;
+    resize: none;
+    font-size: 18px;
+  }
+
+  .btn-copy {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    --color: #1c5b8e;
+  }
+
+  @media (max-width: 350px) {
+    textarea { padding-right: 10px; }
+    .btn-copy {
+      position: static;
+      display: flex;
+      margin-left: auto;
+    }
+  }
+}

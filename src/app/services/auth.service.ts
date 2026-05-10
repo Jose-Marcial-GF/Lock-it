@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup } from '@angular/fire/auth';
-import firebase from "firebase/compat/app";
-import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
+import { Auth, authState } from '@angular/fire/auth';
+// Importamos todo de la versión modular moderna (y borramos las líneas de "compat")
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,8 @@ export class AuthService {
 
   async register(email: string, password: string) {
     try {
-      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      // Añadimos "as any" a this.auth para esquivar el choque de versiones
+      const userCredential = await createUserWithEmailAndPassword(this.auth as any, email, password);
       return userCredential.user;
     } catch (error) {
       console.error('Error en registro', error);
@@ -22,7 +23,8 @@ export class AuthService {
 
   async login(email: string, password: string) {
     try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      // Añadimos "as any"
+      const userCredential = await signInWithEmailAndPassword(this.auth as any, email, password);
       return userCredential.user;
     } catch (error) {
       console.error('Error en login', error);
@@ -32,7 +34,8 @@ export class AuthService {
 
   async logout() {
     try {
-      await signOut(this.auth);
+      // Añadimos "as any"
+      await signOut(this.auth as any);
     } catch (error) {
       console.error('Error al cerrar sesión', error);
       throw error;
@@ -42,11 +45,16 @@ export class AuthService {
   async loginWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(this.auth, provider);
+      // Añadimos "as any"
+      const result = await signInWithPopup(this.auth as any, provider);
       return result.user;
     } catch (error) {
       console.error('Error con Google Sign-In', error);
       throw error;
     }
+  }
+
+  getUserState() {
+    return authState(this.auth as any);
   }
 }

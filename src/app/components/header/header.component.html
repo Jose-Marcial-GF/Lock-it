@@ -1,15 +1,24 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="custom-toolbar">
-
     <div class="header-container">
 
-      <div class="logo-section">
+      <div class="logo-section" routerLink="/home" style="cursor: pointer;">
         <ion-icon name="key" class="icon-key"></ion-icon>
       </div>
 
-      <div class="action-buttons">
+      <div class="action-buttons" *ngIf="!isLoggedIn">
         <button class="btn-login" routerLink="/login">Log In</button>
         <button class="btn-register" routerLink="/register">Register</button>
+      </div>
+
+      <div class="action-buttons logged-in-actions" *ngIf="isLoggedIn">
+
+        <button class="btn-padlock" routerLink="/list">
+          <ion-icon name="lock-closed"></ion-icon>
+        </button>
+
+        <button class="btn-signout" (click)="logout()">Sign Out</button>
+
       </div>
 
     </div>

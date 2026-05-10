@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,11 @@ import { AuthService } from '../../services/auth.service';
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -24,7 +29,7 @@ export class LoginPage implements OnInit {
       try {
         const { email, password } = this.loginForm.value;
         await this.authService.login(email, password);
-        console.log('Login exitoso!');
+        this.router.navigate(['/home']);
       } catch (error) {
         console.error('Error al iniciar sesión', error);
       }
@@ -37,6 +42,7 @@ export class LoginPage implements OnInit {
     try {
       await this.authService.loginWithGoogle();
       console.log('Login con Google exitoso!');
+      this.router.navigate(['/home']);
     } catch (error) {
       console.error('Error con Google', error);
     }
