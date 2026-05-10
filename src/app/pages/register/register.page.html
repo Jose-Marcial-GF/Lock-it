@@ -1,0 +1,46 @@
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <h2 class="ion-text-center">Create an account</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+
+      <app-custom-input
+        placeholder="Phone Number"
+        [control]="registerForm.get('phone')">
+      </app-custom-input>
+
+      <app-custom-input
+        type="email"
+        placeholder="E-mail"
+        [control]="registerForm.get('email')">
+      </app-custom-input>
+
+      <app-custom-input
+        type="password"
+        placeholder="Password"
+        [control]="registerForm.get('password')">
+      </app-custom-input>
+
+      <app-custom-input
+        type="password"
+        placeholder="Confirm Password"
+        [control]="registerForm.get('confirmPassword')">
+      </app-custom-input>
+
+      <ion-button expand="block" type="submit" color="primary" class="ion-margin-top">
+        Create account
+      </ion-button>
+
+    </form>
+
+    <ion-button expand="block" fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top">
+      <ion-icon name="logo-google" slot="start" color="danger"></ion-icon>
+      Sign In with Google
+    </ion-button>
+
+    <p class="ion-text-center ion-margin-top">
+      <a routerLink="/login">Login</a>
+    </p>
+
+  </div>
+</ion-content>

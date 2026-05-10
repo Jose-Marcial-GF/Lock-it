@@ -1,0 +1,19 @@
+<ion-item lines="none" class="custom-input-item">
+  <ion-input
+    [type]="type"
+    [placeholder]="placeholder"
+    [formControl]="formControl">
+  </ion-input>
+</ion-item>
+
+<div class="error-message" *ngIf="formControl?.touched && formControl?.invalid">
+  <span *ngIf="formControl?.errors?.['required']">Este campo es obligatorio.</span>
+  <span *ngIf="formControl?.errors?.['email']">Introduce un email válido.</span>
+  <span *ngIf="formControl?.errors?.['minlength']">
+    Mínimo {{ formControl.errors?.['minlength']?.requiredLength }} caracteres.
+  </span>
+  <span *ngIf="formControl?.errors?.['passwordMismatch']">
+    Las contraseñas no coinciden.
+  </span>
+</div>
+
