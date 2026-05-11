@@ -14,4 +14,25 @@
   --ion-color-secondary-contrast-rgb: 0, 0, 0;
   --ion-color-secondary-shade: #e0bd63;
   --ion-color-secondary-tint: #ffdb7e;
+
+  // Custom colors
+  --primary-blue: #2676B4;
+  --secondary-yellow: #FFD770;
+  --dark-blue: #123e66;
+  --medium-blue: #1c5b8e;
+  --light-yellow: #FFF3D6;
+  --light-gray: #F5F5F5;
+  --error-red: #ff4d4d;
+  --success-green: #4CAF50;
+  --delete-red: #CC0000;
+  --label-gray: #555;
+  --text-gray: #8c8c8c;
+  --black: #000;
+  --white: #fff;
+
+  // Common styles
+  --border-radius: 8px;
+  --border-radius-large: 12px;
+  --border-width: 1px;
+  --font-family: 'Inter', sans-serif;
 }

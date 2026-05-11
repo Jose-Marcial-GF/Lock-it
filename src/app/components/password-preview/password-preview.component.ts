@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { PasswordItem } from '../../services/password.service';
+import { Capacitor } from '@capacitor/core';
+import { PasswordItem } from '../../models/password.model';
 
 @Component({
   selector: 'app-password-preview',
@@ -8,12 +9,16 @@ import { PasswordItem } from '../../services/password.service';
 })
 export class PasswordPreviewComponent {
   @Input() password!: PasswordItem;
-  @Output() onPinToggle = new EventEmitter<string>();
+  @Output() pinToggle = new EventEmitter<string>();
+
+  readonly isMobile = Capacitor.isNativePlatform();
+  copied = false;
 
   async copyToClipboard() {
     try {
       await navigator.clipboard.writeText(this.password.value);
-      console.log('Copiado al portapapeles');
+      this.copied = true;
+      setTimeout(() => this.copied = false, 2000);
     } catch (err) {
       console.error('Error al copiar', err);
     }

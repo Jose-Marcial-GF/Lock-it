@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class PasswordGeneratorService {
 
-  constructor() { }
-
   generate(length: number): string {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
     let password = "";

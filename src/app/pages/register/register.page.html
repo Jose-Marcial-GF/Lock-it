@@ -1,46 +1,63 @@
-<ion-content class="ion-padding">
-  <div class="form-container">
-    <h2 class="ion-text-center">Create an account</h2>
+<div class="ion-page">
+  <app-header></app-header>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+  <ion-content class="ion-padding">
+    <div class="form-container">
+      <h2 class="ion-text-center">Create an account</h2>
 
-      <app-custom-input
-        placeholder="Phone Number"
-        [control]="registerForm.get('phone')">
-      </app-custom-input>
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
 
-      <app-custom-input
-        type="email"
-        placeholder="E-mail"
-        [control]="registerForm.get('email')">
-      </app-custom-input>
+        <div class="flex-row gap-10 mb-10">
+          <app-custom-input placeholder="Name" class="flex-1"></app-custom-input>
+          <app-custom-input placeholder="Surname" class="flex-1"></app-custom-input>
+        </div>
 
-      <app-custom-input
-        type="password"
-        placeholder="Password"
-        [control]="registerForm.get('password')">
-      </app-custom-input>
+        <div class="flex-row gap-10 mb-10">
+          <app-custom-input placeholder="Phone Number" [control]="registerForm.get('phone')" class="flex-1"></app-custom-input>
 
-      <app-custom-input
-        type="password"
-        placeholder="Confirm Password"
-        [control]="registerForm.get('confirmPassword')">
-      </app-custom-input>
+          <div class="profile-pic-box flex-1" (click)="triggerFileInput()">
+            <img *ngIf="profilePictureUrl" [src]="profilePictureUrl" alt="Profile" class="profile-preview">
+            <ng-container *ngIf="!profilePictureUrl">
+              <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
+              <span>{{ uploading ? 'Uploading...' : 'Photo (optional)' }}</span>
+            </ng-container>
+          </div>
+          <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)">
+        </div>
 
-      <ion-button expand="block" type="submit" color="primary" class="ion-margin-top">
-        Create account
+        <app-custom-input
+          type="email"
+          placeholder="E-mail"
+          [control]="registerForm.get('email')">
+        </app-custom-input>
+
+        <app-custom-input
+          type="password"
+          placeholder="Password"
+          [control]="registerForm.get('password')">
+        </app-custom-input>
+
+        <app-custom-input
+          type="password"
+          placeholder="Confirm Password"
+          [control]="registerForm.get('confirmPassword')">
+        </app-custom-input>
+
+        <ion-button expand="block" type="submit" color="primary" class="ion-margin-top">
+          Create account
+        </ion-button>
+
+      </form>
+
+      <ion-button expand="block" fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top">
+        <ion-icon name="logo-google" slot="start" color="primary"></ion-icon>
+        Sign In with Google
       </ion-button>
 
-    </form>
+      <p class="ion-text-center ion-margin-top">
+        <a routerLink="/login">Login</a>
+      </p>
 
-    <ion-button expand="block" fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top">
-      <ion-icon name="logo-google" slot="start" color="danger"></ion-icon>
-      Sign In with Google
-    </ion-button>
-
-    <p class="ion-text-center ion-margin-top">
-      <a routerLink="/login">Login</a>
-    </p>
-
-  </div>
-</ion-content>
+    </div>
+  </ion-content>
+</div>

@@ -32,3 +32,155 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
+/* Common styles */
+.btn {
+  border: none;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+
+.btn-secondary {
+  background: var(--secondary-yellow);
+  color: var(--primary-blue);
+}
+
+.btn-outline {
+  background: transparent;
+  border: var(--border-width) solid var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.btn-success {
+  background: var(--success-green);
+  color: var(--white);
+}
+
+.btn-danger {
+  background: var(--delete-red);
+  color: var(--white);
+}
+
+.input-box {
+  background: var(--white);
+  border: var(--border-width) solid var(--dark-blue);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  font-size: 16px;
+  color: var(--black);
+  outline: none;
+}
+
+input, textarea {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.gap-10 { gap: 10px; }
+.gap-15 { gap: 15px; }
+.gap-20 { gap: 20px; }
+
+.mb-5 { margin-bottom: 5px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-15 { margin-bottom: 15px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+
+.p-10 { padding: 10px; }
+.p-20 { padding: 20px; }
+
+.text-bold { font-weight: bold; }
+.text-italic { font-style: italic; }
+.text-center { text-align: center; }
+
+ion-button {
+  --border-radius: 8px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  font-weight: 700;
+}
+
+ion-input {
+  --border-radius: var(--border-radius);
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --border-color: var(--dark-blue);
+  --background: var(--white);
+  --color: var(--black);
+}
+
+ion-item {
+  --border-radius: 12px;
+  --border-color: var(--black);
+  --border-style: solid;
+  --border-width: 1px;
+  --background: var(--white);
+  --padding-start: 15px;
+  --margin-bottom: 5px;
+}
+
+ion-toolbar {
+  --background: var(--primary-blue);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+ion-content {
+  --background: var(--white);
+}
+
+ion-card {
+  --background: var(--primary-blue);
+  --color: var(--white);
+  border-radius: var(--border-radius-large);
+  padding: 20px;
+  max-width: min(90vw, 1000px);
+  margin: 0 auto;
+}
+
+.error-message {
+  color: var(--error-red);
+  font-size: 12px;
+  padding-left: 15px;
+  margin-bottom: 15px;
+}
+

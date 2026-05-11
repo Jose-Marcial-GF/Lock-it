@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PasswordService, PasswordItem } from '../../services/password.service';
+import { Capacitor } from '@capacitor/core';
+import { PasswordService } from '../../services/password.service';
+import { PasswordItem } from '../../models/password.model';
 import { PasswordGeneratorService } from '../../services/password-generator.service';
+import { CloudinaryService } from '../../services/cloudinary.service';
+import { AuthService } from '../../services/auth.service';
+import { PinService } from '../../services/pin.service';
 
 @Component({
   selector: 'app-password-detail',
@@ -13,15 +18,22 @@ export class PasswordDetailPage implements OnInit {
   passwordId!: string;
   passwordItem!: PasswordItem;
   detailForm!: FormGroup;
-  charsLength = 12; // Por defecto
+  charsLength = 12;
+  iconUrl = '';
+  uploading = false;
+  isPinnedLocal = false;
+  readonly isMobile = Capacitor.isNativePlatform();
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private fb: FormBuilder,
-    private passwordService: PasswordService,
-    private passGenService: PasswordGeneratorService // Reutilizamos lógica (DRY)
-  ) { }
+  @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
+
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private passwordService = inject(PasswordService);
+  private passGenService = inject(PasswordGeneratorService);
+  private cloudinaryService = inject(CloudinaryService);
+  private authService = inject(AuthService);
+  private pinService = inject(PinService);
 
   ngOnInit() {
     this.passwordId = this.route.snapshot.paramMap.get('id') || '';
@@ -31,28 +43,50 @@ export class PasswordDetailPage implements OnInit {
       value: ['', Validators.required]
     });
 
-    // Cargamos los datos de Firebase
     this.passwordService.getPasswordById(this.passwordId).subscribe(data => {
       if (data) {
         this.passwordItem = data;
-        this.detailForm.patchValue({
-          name: data.name,
-          value: data.value
-        });
+        this.iconUrl = data.iconUrl ?? '';
+        this.detailForm.patchValue({ name: data.name, value: data.value });
+
+        if (this.isMobile) {
+          const user = this.authService.getCurrentUser();
+          if (user) {
+            this.pinService.isPinned(user.uid, this.passwordId)
+              .then(pinned => this.isPinnedLocal = pinned);
+          }
+        }
       }
     });
   }
 
-  // Regenerar la contraseña reutilizando el servicio
   regeneratePassword() {
     const newPass = this.passGenService.generate(this.charsLength);
     this.detailForm.patchValue({ value: newPass });
   }
 
-  togglePin() {
-    this.passwordItem.isPinned = !this.passwordItem.isPinned;
-    // Guardamos el pin instantáneamente
-    this.passwordService.togglePin(this.passwordId, !this.passwordItem.isPinned);
+  uploadImage() {
+    this.imageInput.nativeElement.click();
+  }
+
+  async onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.uploading = true;
+    try {
+      this.iconUrl = await this.cloudinaryService.uploadImage(file);
+    } catch {
+      console.error('Error uploading image to Cloudinary');
+    } finally {
+      this.uploading = false;
+    }
+  }
+
+  async togglePin() {
+    if (!this.isMobile) return;
+    const user = this.authService.getCurrentUser();
+    if (!user) return;
+    this.isPinnedLocal = await this.pinService.togglePin(user.uid, this.passwordId);
   }
 
   async saveChanges() {
@@ -60,7 +94,7 @@ export class PasswordDetailPage implements OnInit {
       await this.passwordService.updatePassword(this.passwordId, {
         name: this.detailForm.value.name,
         value: this.detailForm.value.value,
-        isPinned: this.passwordItem.isPinned
+        iconUrl: this.iconUrl
       });
       this.router.navigate(['/list']);
     }
@@ -69,9 +103,5 @@ export class PasswordDetailPage implements OnInit {
   async deletePassword() {
     await this.passwordService.deletePassword(this.passwordId);
     this.router.navigate(['/list']);
-  }
-
-  uploadImage() {
-    console.log('Botón de imagen pulsado - A implementar con Firebase Storage');
   }
 }

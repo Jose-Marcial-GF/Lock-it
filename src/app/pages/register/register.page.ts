@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { CloudinaryService } from '../../services/cloudinary.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -9,8 +11,15 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterPage implements OnInit {
   registerForm!: FormGroup;
+  profilePictureUrl = '';
+  uploading = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private cloudinaryService = inject(CloudinaryService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.registerForm = this.fb.group({
@@ -21,17 +30,31 @@ export class RegisterPage implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
-
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
-
     if (password !== confirmPassword && control.get('confirmPassword')?.dirty) {
-
       control.get('confirmPassword')?.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
     return null;
+  }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  async onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.uploading = true;
+    try {
+      this.profilePictureUrl = await this.cloudinaryService.uploadImage(file);
+    } catch {
+      console.error('Error al subir la imagen a Cloudinary');
+    } finally {
+      this.uploading = false;
+    }
   }
 
   async onRegister() {
@@ -39,8 +62,10 @@ export class RegisterPage implements OnInit {
       try {
         const { email, password } = this.registerForm.value;
         await this.authService.register(email, password);
-        console.log('Usuario creado exitosamente');
-
+        if (this.profilePictureUrl) {
+          await this.authService.updateUserProfile(this.profilePictureUrl);
+        }
+        await this.router.navigate(['/home']);
       } catch (error) {
         console.error('Error al registrar', error);
       }
@@ -52,7 +77,7 @@ export class RegisterPage implements OnInit {
   async onGoogleSignIn() {
     try {
       await this.authService.loginWithGoogle();
-      console.log('Logueado con Google exitosamente');
+      await this.router.navigate(['/home']);
     } catch (error) {
       console.error('Error con Google', error);
     }

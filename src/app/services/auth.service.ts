@@ -1,18 +1,32 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { Auth, authState } from '@angular/fire/auth';
-// Importamos todo de la versión modular moderna (y borramos las líneas de "compat")
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile
+} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private auth: Auth) { }
+  private auth = inject(Auth);
+
+  getCurrentUser() {
+    return this.auth.currentUser;
+  }
+
+  async updateUserProfile(photoURL: string) {
+    const user = this.auth.currentUser;
+    if (user) await updateProfile(user as any, { photoURL });
+  }
 
   async register(email: string, password: string) {
     try {
-      // Añadimos "as any" a this.auth para esquivar el choque de versiones
       const userCredential = await createUserWithEmailAndPassword(this.auth as any, email, password);
       return userCredential.user;
     } catch (error) {
@@ -23,7 +37,6 @@ export class AuthService {
 
   async login(email: string, password: string) {
     try {
-      // Añadimos "as any"
       const userCredential = await signInWithEmailAndPassword(this.auth as any, email, password);
       return userCredential.user;
     } catch (error) {
@@ -34,7 +47,6 @@ export class AuthService {
 
   async logout() {
     try {
-      // Añadimos "as any"
       await signOut(this.auth as any);
     } catch (error) {
       console.error('Error al cerrar sesión', error);
@@ -45,7 +57,6 @@ export class AuthService {
   async loginWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
-      // Añadimos "as any"
       const result = await signInWithPopup(this.auth as any, provider);
       return result.user;
     } catch (error) {

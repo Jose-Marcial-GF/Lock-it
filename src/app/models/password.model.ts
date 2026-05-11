@@ -3,6 +3,6 @@ export interface PasswordItem {
   userId: string;
   name: string;
   value: string;
-  isPinned: boolean;
+  isPinned?: boolean;
   iconUrl?: string;
 }

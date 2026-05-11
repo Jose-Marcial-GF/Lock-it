@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PasswordGeneratorService } from '../../services/password-generator.service';
 import { AuthService } from '../../services/auth.service';
+import { PasswordService } from '../../services/password.service';
 
 @Component({
   selector: 'app-password-card',
@@ -15,18 +16,16 @@ export class PasswordCardComponent implements OnInit {
   lengthControl = new FormControl(12);
   generatedPassword = '';
   isLoggedIn = false;
+  savedMessage = false;
 
-  constructor(
-    private passGenService: PasswordGeneratorService,
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  private passGenService = inject(PasswordGeneratorService);
+  private authService = inject(AuthService);
+  private passwordService = inject(PasswordService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.onGenerate();
-    this.authService.getUserState().subscribe(user => {
-      this.isLoggedIn = !!user; // Si hay user es true, si es null es false
-    });
+    this.authService.getUserState().subscribe(user => this.isLoggedIn = !!user);
   }
 
   onGenerate() {
@@ -34,11 +33,24 @@ export class PasswordCardComponent implements OnInit {
     this.generatedPassword = this.passGenService.generate(chars);
   }
 
-  goToLogin() {
-    this.router.navigate(['/login']);
+  handleSave() {
+    if (!this.isLoggedIn) this.router.navigate(['/login']);
+    else this.onSave();
   }
 
-  onSave() {
-    console.log('Guardando contraseña de verdad...');
+  async onSave() {
+    const user = this.authService.getCurrentUser();
+    if (!user) { this.router.navigate(['/login']); return; }
+
+    await this.passwordService.addPassword({
+      userId: user.uid,
+      name: this.nameControl.value?.trim() || 'Untitled',
+      value: this.generatedPassword
+    });
+
+    this.nameControl.setValue('');
+    this.onGenerate();
+    this.savedMessage = true;
+    setTimeout(() => this.savedMessage = false, 3000);
   }
 }
