@@ -1,7 +1,4 @@
 .header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 0 20px;
   width: 100%;
 }
@@ -12,48 +9,15 @@
   transform: rotate(134deg) scaleY(-1.0);
 }
 
-.action-buttons {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 15px;
-}
-
-%btn-base {
-  border: none;
-  border-radius: var(--border-radius);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.btn-login {
-  @extend %btn-base;
-  background: var(--secondary-yellow);
-  color: var(--primary-blue);
-  padding: 12px 20px;
-  font-size: 16px;
-}
+.btn-login { padding: 12px 20px; }
 
 .btn-register {
-  @extend %btn-base;
   background: transparent;
-  padding: 12px 10px;
-  font-weight: 400;
-  font-size: 16px;
   color: var(--light-gray);
-}
-
-.logged-in-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  font-weight: 400;
 }
 
 .btn-padlock {
-  @extend %btn-base;
   background-color: var(--dark-blue);
   color: var(--secondary-yellow);
   width: 45px;
@@ -62,10 +26,6 @@
 }
 
 .btn-signout {
-  @extend %btn-base;
-  background: var(--secondary-yellow);
-  color: var(--primary-blue);
   padding: 0 15px;
   height: 40px;
-  font-size: 16px;
 }

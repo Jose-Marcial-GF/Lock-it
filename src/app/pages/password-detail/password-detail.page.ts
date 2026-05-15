@@ -1,11 +1,11 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Capacitor } from '@capacitor/core';
+import { Subscription } from 'rxjs';
 import { PasswordService } from '../../services/password.service';
 import { PasswordItem } from '../../models/password.model';
 import { PasswordGeneratorService } from '../../services/password-generator.service';
-import { CloudinaryService } from '../../services/cloudinary.service';
 import { AuthService } from '../../services/auth.service';
 import { PinService } from '../../services/pin.service';
 
@@ -14,26 +14,26 @@ import { PinService } from '../../services/pin.service';
   templateUrl: './password-detail.page.html',
   styleUrls: ['./password-detail.page.scss'],
 })
-export class PasswordDetailPage implements OnInit {
+export class PasswordDetailPage implements OnInit, OnDestroy {
   passwordId!: string;
   passwordItem!: PasswordItem;
   detailForm!: FormGroup;
   charsLength = 12;
   iconUrl = '';
-  uploading = false;
   isPinnedLocal = false;
   readonly isMobile = Capacitor.isNativePlatform();
-
-  @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
+  private currentUserId = '';
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private passwordService = inject(PasswordService);
   private passGenService = inject(PasswordGeneratorService);
-  private cloudinaryService = inject(CloudinaryService);
   private authService = inject(AuthService);
   private pinService = inject(PinService);
+  private ngZone = inject(NgZone);
+  private passwordSub!: Subscription;
+  private authSub!: Subscription;
 
   ngOnInit() {
     this.passwordId = this.route.snapshot.paramMap.get('id') || '';
@@ -43,21 +43,28 @@ export class PasswordDetailPage implements OnInit {
       value: ['', Validators.required]
     });
 
-    this.passwordService.getPasswordById(this.passwordId).subscribe(data => {
+    // Capture user ID from observable so it's always available, even on first load
+    this.authSub = this.authService.getUserState().subscribe(user => {
+      this.currentUserId = user?.uid ?? '';
+    });
+
+    this.passwordSub = this.passwordService.getPasswordById(this.passwordId).subscribe(data => {
       if (data) {
         this.passwordItem = data;
         this.iconUrl = data.iconUrl ?? '';
         this.detailForm.patchValue({ name: data.name, value: data.value });
 
-        if (this.isMobile) {
-          const user = this.authService.getCurrentUser();
-          if (user) {
-            this.pinService.isPinned(user.uid, this.passwordId)
-              .then(pinned => this.isPinnedLocal = pinned);
-          }
+        if (this.isMobile && this.currentUserId) {
+          this.pinService.isPinned(this.currentUserId, this.passwordId)
+            .then(pinned => this.ngZone.run(() => this.isPinnedLocal = pinned));
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.passwordSub?.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   regeneratePassword() {
@@ -65,28 +72,10 @@ export class PasswordDetailPage implements OnInit {
     this.detailForm.patchValue({ value: newPass });
   }
 
-  uploadImage() {
-    this.imageInput.nativeElement.click();
-  }
-
-  async onImageSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    this.uploading = true;
-    try {
-      this.iconUrl = await this.cloudinaryService.uploadImage(file);
-    } catch {
-      console.error('Error uploading image to Cloudinary');
-    } finally {
-      this.uploading = false;
-    }
-  }
-
   async togglePin() {
-    if (!this.isMobile) return;
-    const user = this.authService.getCurrentUser();
-    if (!user) return;
-    this.isPinnedLocal = await this.pinService.togglePin(user.uid, this.passwordId);
+    if (!this.isMobile || !this.currentUserId) return;
+    const pinned = await this.pinService.togglePin(this.currentUserId, this.passwordId);
+    this.ngZone.run(() => this.isPinnedLocal = pinned);
   }
 
   async saveChanges() {
@@ -96,12 +85,12 @@ export class PasswordDetailPage implements OnInit {
         value: this.detailForm.value.value,
         iconUrl: this.iconUrl
       });
-      this.router.navigate(['/list']);
+      await this.router.navigate(['/list']);
     }
   }
 
   async deletePassword() {
     await this.passwordService.deletePassword(this.passwordId);
-    this.router.navigate(['/list']);
+    await this.router.navigate(['/list']);
   }
 }

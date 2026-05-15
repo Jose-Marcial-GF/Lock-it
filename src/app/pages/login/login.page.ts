@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
+  loginError = '';
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -23,13 +24,14 @@ export class LoginPage implements OnInit {
   }
 
   async onLogin() {
+    this.loginError = '';
     if (this.loginForm.valid) {
       try {
         const { email, password } = this.loginForm.value;
         await this.authService.login(email, password);
         await this.router.navigate(['/home']);
-      } catch (error) {
-        console.error('Error al iniciar sesión', error);
+      } catch {
+        this.loginError = 'Email o contraseña incorrectos.';
       }
     } else {
       this.loginForm.markAllAsTouched();
@@ -37,11 +39,13 @@ export class LoginPage implements OnInit {
   }
 
   async onGoogleSignIn() {
+    this.loginError = '';
     try {
       await this.authService.loginWithGoogle();
       await this.router.navigate(['/home']);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error con Google', error);
+      this.loginError = error?.message ?? 'Error al iniciar sesión con Google.';
     }
   }
 }
