@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.upload-section {
+  background: var(--secondary-yellow);
+  border-radius: var(--border-radius-large);
+  padding: 20px;
+}
+
+.icon-preview {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.icon-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+.icon-placeholder-icon {
+  font-size: 60px;
+  color: var(--dark-blue);
+}
+
+.btn-upload {
+  background: var(--dark-blue);
+  color: var(--white);
+  font-weight: bold;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 10px 20px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}

@@ -68,3 +68,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Capacitor Android - generated/sensitive
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/app/google-services.json
+
+# Sensitive config files (share via secure channel, not git)
+google-services.json
+google-services*.json

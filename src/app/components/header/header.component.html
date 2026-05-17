@@ -1,24 +1,21 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="custom-toolbar">
-    <div class="header-container">
+    <div class="header-container flex-row justify-between align-center">
 
-      <div class="logo-section" routerLink="/home" style="cursor: pointer;">
+      <div routerLink="/home" style="cursor: pointer;">
         <ion-icon name="key" class="icon-key"></ion-icon>
       </div>
 
-      <div class="action-buttons" *ngIf="!isLoggedIn">
-        <button class="btn-login" routerLink="/login">Log In</button>
-        <button class="btn-register" routerLink="/register">Register</button>
+      <div class="flex-row align-center gap-15" *ngIf="!isLoggedIn">
+        <button class="btn btn-secondary btn-login" routerLink="/login">Log In</button>
+        <button class="btn btn-register" routerLink="/register">Register</button>
       </div>
 
-      <div class="action-buttons logged-in-actions" *ngIf="isLoggedIn">
-
-        <button class="btn-padlock" routerLink="/list">
+      <div class="flex-row align-center gap-10" *ngIf="isLoggedIn">
+        <button class="btn btn-padlock" routerLink="/list">
           <ion-icon name="lock-closed"></ion-icon>
         </button>
-
-        <button class="btn-signout" (click)="logout()">Sign Out</button>
-
+        <button class="btn btn-secondary btn-signout" (click)="logout()">Sign Out</button>
       </div>
 
     </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { NavigationEnd, Router } from '@angular/router';
+import { switchMap, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { Capacitor } from '@capacitor/core';
 import { PasswordService } from '../../services/password.service';
@@ -18,12 +19,18 @@ export class PasswordListComponent implements OnInit, OnDestroy {
   readonly isMobile = Capacitor.isNativePlatform();
   private currentUserId = '';
   private sub!: Subscription;
+  private routerSub!: Subscription;
 
   private passwordService = inject(PasswordService);
   private authService = inject(AuthService);
   private pinService = inject(PinService);
+  private router = inject(Router);
 
   ngOnInit() {
+    this.routerSub = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd && e.urlAfterRedirects === '/list')
+    ).subscribe(() => this.refreshPins());
+
     this.sub = this.authService.getUserState().pipe(
       switchMap(user => {
         if (!user) { this.currentUserId = ''; return of([]); }
@@ -58,7 +65,16 @@ export class PasswordListComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async refreshPins() {
+    if (!this.isMobile || !this.currentUserId) return;
+    const pinnedIds = await this.pinService.getPinnedIds(this.currentUserId);
+    this.passwords = this.passwords
+      .map(p => ({ ...p, isPinned: pinnedIds.includes(p.id!) }))
+      .sort((a, b) => a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1);
+  }
+
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.routerSub?.unsubscribe();
   }
 }

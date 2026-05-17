@@ -1,0 +1,13 @@
+<div class="generator-controls flex-row align-center gap-10">
+  <label class="italic-label text-italic">Chars</label>
+  <div class="chars-input flex-row align-center">
+    <input type="number" [value]="charsLength" (change)="onCharsChange($event)" min="4" max="64">
+  </div>
+  <div class="spacer"></div>
+  <button type="button" class="btn-reload" (click)="generate.emit()">
+    <ion-icon name="refresh-outline"></ion-icon>
+  </button>
+  <button *ngIf="showLock" type="button" class="padlock" (click)="save.emit()">
+    <ion-icon name="lock-closed"></ion-icon>
+  </button>
+</div>

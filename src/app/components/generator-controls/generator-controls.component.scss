@@ -1,0 +1,58 @@
+:host {
+  display: block;
+}
+
+.generator-controls {
+  height: 40px;
+}
+
+.italic-label {
+  color: var(--secondary-text-color);
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.chars-input {
+  background: var(--white);
+  border: 1px solid var(--dark-blue);
+  border-radius: var(--border-radius);
+  padding: 5px 10px;
+  height: 100%;
+
+  input {
+    width: 40px;
+    font-size: 16px;
+    color: var(--black);
+  }
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+%icon-btn {
+  border: none;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+  height: 100%;
+  width: 45px;
+  padding: 0;
+}
+
+.btn-reload {
+  @extend %icon-btn;
+  background-color: var(--secondary-yellow);
+  color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+}
+
+.padlock {
+  @extend %icon-btn;
+  background-color: var(--dark-blue);
+  color: var(--secondary-yellow);
+  border: 1px solid var(--white);
+}

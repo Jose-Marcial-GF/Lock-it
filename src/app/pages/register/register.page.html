@@ -3,59 +3,69 @@
 
   <ion-content class="ion-padding">
     <div class="form-container">
-      <h2 class="ion-text-center">Create an account</h2>
+      <h2 class="ion-text-center ion-margin-bottom">Create an account</h2>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="flex-column align-center">
 
-        <div class="flex-row gap-10 mb-10">
-          <app-custom-input placeholder="Name" class="flex-1"></app-custom-input>
-          <app-custom-input placeholder="Surname" class="flex-1"></app-custom-input>
-        </div>
+        <ion-grid class="ion-no-padding w-100">
+          <ion-row>
+            <ion-col size="6" class="ion-padding-end">
+              <app-custom-input placeholder="Name" [control]="registerForm.get('name')"></app-custom-input>
+            </ion-col>
+            <ion-col size="6" class="ion-padding-start">
+              <app-custom-input placeholder="Surname" [control]="registerForm.get('surname')"></app-custom-input>
+            </ion-col>
+          </ion-row>
 
-        <div class="flex-row gap-10 mb-10">
-          <app-custom-input placeholder="Phone Number" [control]="registerForm.get('phone')" class="flex-1"></app-custom-input>
+          <ion-row class="ion-margin-top">
+            <ion-col size="6" class="ion-padding-end">
+              <app-custom-input placeholder="Phone Number" [control]="registerForm.get('phone')"></app-custom-input>
+            </ion-col>
+            <ion-col size="6" class="ion-padding-start">
+              <div (click)="triggerFileInput()"
+                   class="photo-box flex-row align-center justify-center">
 
-          <div class="profile-pic-box flex-1" (click)="triggerFileInput()">
-            <img *ngIf="profilePictureUrl" [src]="profilePictureUrl" alt="Profile" class="profile-preview">
-            <ng-container *ngIf="!profilePictureUrl">
-              <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
-              <span>{{ uploading ? 'Uploading...' : 'Photo (optional)' }}</span>
-            </ng-container>
-          </div>
-          <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)">
-        </div>
+                <img *ngIf="profilePictureUrl" [src]="profilePictureUrl" class="profile-preview">
 
-        <app-custom-input
-          type="email"
-          placeholder="E-mail"
-          [control]="registerForm.get('email')">
-        </app-custom-input>
+                <ng-container *ngIf="!profilePictureUrl">
+                  <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
+                  <ion-label class="photo-label">
+                    {{ uploading ? 'Uploading...' : 'Photo (optional)' }}
+                  </ion-label>
+                </ng-container>
+              </div>
+              <input #fileInput type="file" accept="image/*" class="ion-hide" (change)="onFileSelected($event)">
+            </ion-col>
+          </ion-row>
 
-        <app-custom-input
-          type="password"
-          placeholder="Password"
-          [control]="registerForm.get('password')">
-        </app-custom-input>
+          <ion-row class="ion-margin-top">
+            <ion-col size="12">
+              <app-custom-input type="email" placeholder="E-mail" [control]="registerForm.get('email')"></app-custom-input>
+            </ion-col>
+            <ion-col size="12" class="ion-margin-top">
+              <app-custom-input type="password" placeholder="Password" [control]="registerForm.get('password')"></app-custom-input>
+            </ion-col>
+            <ion-col size="12" class="ion-margin-top">
+              <app-custom-input type="password" placeholder="Confirm Password" [control]="registerForm.get('confirmPassword')"></app-custom-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 
-        <app-custom-input
-          type="password"
-          placeholder="Confirm Password"
-          [control]="registerForm.get('confirmPassword')">
-        </app-custom-input>
-
-        <ion-button expand="block" type="submit" color="primary" class="ion-margin-top">
-          Create account
+        <ion-button type="submit" color="primary" class="ion-margin-top ion-align-self-center">
+          Create Account
         </ion-button>
+
+        <ion-button fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top ion-align-self-center">
+          <ion-icon name="logo-google" slot="start" color="primary"></ion-icon>
+          Sign in with Google
+        </ion-button>
+
+        <p *ngIf="googleError" class="error-message ion-text-center">{{ googleError }}</p>
 
       </form>
 
-      <ion-button expand="block" fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top">
-        <ion-icon name="logo-google" slot="start" color="primary"></ion-icon>
-        Sign In with Google
-      </ion-button>
-
       <p class="ion-text-center ion-margin-top">
-        <a routerLink="/login">Login</a>
+        <a routerLink="/login" class="login-link">Login</a>
       </p>
 
     </div>

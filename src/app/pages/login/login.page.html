@@ -2,10 +2,10 @@
   <app-header></app-header>
 
   <ion-content class="ion-padding">
-    <div class="form-container" style="margin-top: 50px;">
-      <h2 class="ion-text-center">Log In</h2>
+    <div class="form-container">
+      <h2 class="ion-text-center mb-30">Log In</h2>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="flex-column gap-15">
 
         <app-custom-input
           type="email"
@@ -19,16 +19,20 @@
           [control]="loginForm.get('password')">
         </app-custom-input>
 
-        <ion-button expand="block" type="submit" color="primary" class="ion-margin-top">
+        <ion-button type="submit" color="primary" class="ion-margin-top ion-align-self-center">
           Log In
         </ion-button>
 
+        <p *ngIf="loginError" class="error-message ion-text-center">{{ loginError }}</p>
+
       </form>
 
-      <ion-button expand="block" fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top">
-        <ion-icon name="logo-google" slot="start"></ion-icon>
-        Sign In with Google
-      </ion-button>
+      <div class="ion-text-center">
+        <ion-button fill="outline" color="dark" (click)="onGoogleSignIn()" class="ion-margin-top">
+          <ion-icon name="logo-google" color="primary" slot="start"></ion-icon>
+          Sign In with Google
+        </ion-button>
+      </div>
 
       <p class="ion-text-center ion-margin-top">
         <a routerLink="/register">Create an Account</a>

@@ -8,11 +8,11 @@ import { CustomInputComponent } from './custom-input/custom-input.component';
 import { HeaderComponent } from './header/header.component';
 import { PasswordCardComponent } from './password-card/password-card.component';
 import { CopyTextareaComponent } from './copy-textarea/copy-textarea.component';
-
-
 import { LockPasswdComponent } from './lock-passwd/lock-passwd.component';
 import { PasswordPreviewComponent } from './password-preview/password-preview.component';
 import { PasswordListComponent } from './password-list/password-list.component';
+import { GeneratorControlsComponent } from './generator-controls/generator-controls.component';
+import { ImageUploadComponent } from './image-upload/image-upload.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,9 @@ import { PasswordListComponent } from './password-list/password-list.component';
     CopyTextareaComponent,
     LockPasswdComponent,
     PasswordPreviewComponent,
-    PasswordListComponent
+    PasswordListComponent,
+    GeneratorControlsComponent,
+    ImageUploadComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +40,9 @@ import { PasswordListComponent } from './password-list/password-list.component';
     CopyTextareaComponent,
     LockPasswdComponent,
     PasswordPreviewComponent,
-    PasswordListComponent
+    PasswordListComponent,
+    GeneratorControlsComponent,
+    ImageUploadComponent
   ]
 })
 export class ComponentsModule { }

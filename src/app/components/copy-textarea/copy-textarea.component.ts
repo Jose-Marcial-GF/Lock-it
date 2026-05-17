@@ -7,13 +7,14 @@ import { Component, Input } from '@angular/core';
 })
 export class CopyTextareaComponent {
   @Input() textContent: string = '';
+  copied = false;
 
   async copyToClipboard() {
     if (!this.textContent) return;
     try {
       await navigator.clipboard.writeText(this.textContent);
-      console.log('¡Contraseña copiada al portapapeles!');
-      // Aquí podrías lanzar un Toast (notificación) de Ionic en el futuro
+      this.copied = true;
+      setTimeout(() => this.copied = false, 2000);
     } catch (err) {
       console.error('Error al copiar: ', err);
     }

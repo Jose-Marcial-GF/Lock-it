@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">lock-it</string>
+    <string name="title_activity_main">lock-it</string>
+    <string name="package_name">com.lockit.app</string>
+    <string name="custom_url_scheme">com.lockit.app</string>
+    <string name="server_client_id">640970880554-2feo8ft67eej2r8meedq6p3agjqno74s.apps.googleusercontent.com</string>
+</resources>

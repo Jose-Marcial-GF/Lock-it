@@ -1,0 +1,10 @@
+<div class="upload-section flex-row align-center gap-20">
+  <div class="icon-preview flex-row justify-center align-center">
+    <img *ngIf="iconUrl" [src]="iconUrl" class="icon-img" alt="icon">
+    <ion-icon *ngIf="!iconUrl" name="image-outline" class="icon-placeholder-icon"></ion-icon>
+  </div>
+  <button type="button" class="btn-upload" (click)="triggerUpload()" [disabled]="uploading">
+    {{ uploading ? 'Uploading...' : (iconUrl ? 'Change Image' : 'Upload Image') }}
+  </button>
+  <input #imageInput type="file" accept="image/*" style="display:none" (change)="onImageSelected($event)">
+</div>

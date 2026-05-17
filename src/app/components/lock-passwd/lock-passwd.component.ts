@@ -9,6 +9,12 @@ import { Capacitor } from '@capacitor/core';
 
 export class LockPasswdComponent {
   @Input() isPinned = false;
+  @Input() iconColor?: string;
   @Output() togglePin = new EventEmitter<void>();
   readonly isMobile = Capacitor.isNativePlatform();
+
+  get resolvedColor(): string {
+    if (this.iconColor) return this.iconColor;
+    return this.isPinned ? 'var(--primary-blue)' : 'var(--secondary-yellow)';
+  }
 }

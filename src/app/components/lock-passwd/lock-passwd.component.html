@@ -1,3 +1,5 @@
-<ion-button *ngIf="isMobile" fill="clear" class="pin-btn" (click)="togglePin.emit()">
-  <ion-icon [name]="isPinned ? 'pin' : 'pin-outline'"></ion-icon>
+<ion-button *ngIf="isMobile" fill="clear" class="ion-no-margin pin-btn" (click)="togglePin.emit()">
+  <ion-icon [name]="isPinned ? 'flag' : 'flag-outline'"
+            [style.color]="resolvedColor"
+            style="font-size: 24px"></ion-icon>
 </ion-button>

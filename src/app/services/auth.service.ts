@@ -6,8 +6,12 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithCredential,
+  getRedirectResult,
   updateProfile
 } from '@angular/fire/auth';
+import { Capacitor } from '@capacitor/core';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +51,9 @@ export class AuthService {
 
   async logout() {
     try {
+      if (Capacitor.isNativePlatform()) {
+        await GoogleAuth.signOut();
+      }
       await signOut(this.auth as any);
     } catch (error) {
       console.error('Error al cerrar sesión', error);
@@ -56,12 +63,30 @@ export class AuthService {
 
   async loginWithGoogle() {
     try {
+      if (Capacitor.isNativePlatform()) {
+        const googleUser = await GoogleAuth.signIn();
+        const idToken = googleUser.authentication.idToken;
+        if (!idToken) throw new Error('Google Sign-In did not return an idToken. Check serverClientId in capacitor.config.ts.');
+        const credential = GoogleAuthProvider.credential(idToken);
+        const result = await signInWithCredential(this.auth as any, credential);
+        return result.user;
+      }
+      // Desktop: standard popup flow
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth as any, provider);
       return result.user;
     } catch (error) {
       console.error('Error con Google Sign-In', error);
       throw error;
+    }
+  }
+
+  async handleGoogleRedirectResult() {
+    try {
+      const result = await getRedirectResult(this.auth as any);
+      return result?.user ?? null;
+    } catch {
+      return null;
     }
   }
 

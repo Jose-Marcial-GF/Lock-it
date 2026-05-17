@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { PasswordGeneratorService } from '../../services/password-generator.service';
 import { AuthService } from '../../services/auth.service';
 import { PasswordService } from '../../services/password.service';
@@ -10,10 +11,9 @@ import { PasswordService } from '../../services/password.service';
   templateUrl: './password-card.component.html',
   styleUrls: ['./password-card.component.scss'],
 })
-export class PasswordCardComponent implements OnInit {
-
+export class PasswordCardComponent implements OnInit, OnDestroy {
   nameControl = new FormControl('');
-  lengthControl = new FormControl(12);
+  charsLength = 12;
   generatedPassword = '';
   isLoggedIn = false;
   savedMessage = false;
@@ -22,15 +22,19 @@ export class PasswordCardComponent implements OnInit {
   private authService = inject(AuthService);
   private passwordService = inject(PasswordService);
   private router = inject(Router);
+  private authSub!: Subscription;
 
   ngOnInit() {
     this.onGenerate();
-    this.authService.getUserState().subscribe(user => this.isLoggedIn = !!user);
+    this.authSub = this.authService.getUserState().subscribe(user => this.isLoggedIn = !!user);
+  }
+
+  ngOnDestroy() {
+    this.authSub?.unsubscribe();
   }
 
   onGenerate() {
-    const chars = this.lengthControl.value || 12;
-    this.generatedPassword = this.passGenService.generate(chars);
+    this.generatedPassword = this.passGenService.generate(this.charsLength);
   }
 
   handleSave() {
