@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PasswordGeneratorService } from '../../services/password-generator.service';
@@ -12,7 +12,7 @@ import { PasswordService } from '../../services/password.service';
   styleUrls: ['./password-card.component.scss'],
 })
 export class PasswordCardComponent implements OnInit, OnDestroy {
-  nameControl = new FormControl('');
+  nameControl = new FormControl('', Validators.required);
   charsLength = 12;
   generatedPassword = '';
   isLoggedIn = false;
@@ -39,6 +39,7 @@ export class PasswordCardComponent implements OnInit, OnDestroy {
 
   handleSave() {
     if (!this.isLoggedIn) this.router.navigate(['/login']);
+    else if (this.nameControl.invalid) this.nameControl.markAsTouched();
     else this.onSave();
   }
 
@@ -48,7 +49,7 @@ export class PasswordCardComponent implements OnInit, OnDestroy {
 
     await this.passwordService.addPassword({
       userId: user.uid,
-      name: this.nameControl.value?.trim() || 'Untitled',
+      name: this.nameControl.value!.trim(),
       value: this.generatedPassword
     });
 

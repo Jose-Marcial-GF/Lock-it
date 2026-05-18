@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class RegisterPage implements OnInit {
   registerForm!: FormGroup;
   profilePictureUrl = '';
+  selectedFileName = '';
   uploading = false;
   googleError = '';
 
@@ -53,6 +54,7 @@ export class RegisterPage implements OnInit {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
     this.uploading = true;
+    this.selectedFileName = file.name;
     try {
       this.profilePictureUrl = await this.cloudinaryService.uploadImage(file);
     } catch {

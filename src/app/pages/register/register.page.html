@@ -30,7 +30,7 @@
                 <ng-container *ngIf="!profilePictureUrl">
                   <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
                   <ion-label class="photo-label">
-                    {{ uploading ? 'Uploading...' : 'Photo (optional)' }}
+                    {{ uploading ? 'Uploading...' : (selectedFileName || 'Photo (optional)') }}
                   </ion-label>
                 </ng-container>
               </div>
