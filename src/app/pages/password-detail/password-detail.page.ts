@@ -43,7 +43,6 @@ export class PasswordDetailPage implements OnInit, OnDestroy {
       value: ['', Validators.required]
     });
 
-    // Capture user ID from observable so it's always available, even on first load
     this.authSub = this.authService.getUserState().subscribe(user => {
       this.currentUserId = user?.uid ?? '';
     });

@@ -71,22 +71,12 @@ export class AuthService {
         const result = await signInWithCredential(this.auth as any, credential);
         return result.user;
       }
-      // Desktop: standard popup flow
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth as any, provider);
       return result.user;
     } catch (error) {
       console.error('Error con Google Sign-In', error);
       throw error;
-    }
-  }
-
-  async handleGoogleRedirectResult() {
-    try {
-      const result = await getRedirectResult(this.auth as any);
-      return result?.user ?? null;
-    } catch {
-      return null;
     }
   }
 
