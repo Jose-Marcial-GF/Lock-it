@@ -8,7 +8,7 @@ import { CustomInputComponent } from './custom-input/custom-input.component';
 import { HeaderComponent } from './header/header.component';
 import { PasswordCardComponent } from './password-card/password-card.component';
 import { CopyTextareaComponent } from './copy-textarea/copy-textarea.component';
-import { LockPasswdComponent } from './lock-passwd/lock-passwd.component';
+import { PasswordPinComponent } from './password-pin/password-pin.component';
 import { PasswordPreviewComponent } from './password-preview/password-preview.component';
 import { PasswordListComponent } from './password-list/password-list.component';
 import { GeneratorControlsComponent } from './generator-controls/generator-controls.component';
@@ -20,7 +20,7 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     HeaderComponent,
     PasswordCardComponent,
     CopyTextareaComponent,
-    LockPasswdComponent,
+    PasswordPinComponent,
     PasswordPreviewComponent,
     PasswordListComponent,
     GeneratorControlsComponent,
@@ -38,7 +38,7 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     HeaderComponent,
     PasswordCardComponent,
     CopyTextareaComponent,
-    LockPasswdComponent,
+    PasswordPinComponent,
     PasswordPreviewComponent,
     PasswordListComponent,
     GeneratorControlsComponent,

@@ -2,12 +2,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 
 @Component({
-  selector: 'app-lock-passwd',
-  templateUrl: 'lock-passwd.component.html',
-  styleUrls: ['lock-passwd.component.scss',]
+  selector: 'app-password-pin',
+  templateUrl: 'password-pin.component.html',
+  styleUrls: ['password-pin.component.scss',]
 })
 
-export class LockPasswdComponent {
+export class PasswordPinComponent {
   @Input() isPinned = false;
   @Input() iconColor?: string;
   @Output() togglePin = new EventEmitter<void>();
